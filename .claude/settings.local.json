@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(php:*)",
+      "Bash(composer --version)",
+      "Bash(laravel:*)",
+      "Bash(composer create-project:*)",
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
