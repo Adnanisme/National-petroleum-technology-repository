@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('category');
+            $table->string('author')->nullable();
+            $table->string('institution')->nullable();
+            $table->string('type')->nullable();
+            $table->integer('year')->nullable();
+            $table->json('keywords')->nullable();
             $table->string('file_name');
             $table->string('file_path');
             $table->string('file_type')->default('pdf');

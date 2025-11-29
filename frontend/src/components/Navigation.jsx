@@ -12,7 +12,7 @@ export default function Navigation() {
     { path: "/repository", label: "Repository" },
     { path: "/innovation", label: "Innovation Hub" },
     { path: "/databank", label: "Data Bank" },
-    { path: "/policy", label: "Policy & Analytics" },
+    { path: "/policy", label: "Policy" },
     { path: "/trainees", label: "Trainees & Scholars" },
     { path: "/about", label: "About" },
   ];
@@ -48,27 +48,34 @@ export default function Navigation() {
   if (isAuthPage) return null;
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-700" />
+    <header className="sticky top-0 z-40 backdrop-blur-lg bg-white/80 border-b border-slate-200/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.02]">
+          <img
+            src="/logo.png"
+            alt="PTDF - Petroleum Technology Development Fund"
+            className="h-14 w-14 object-contain transition-transform group-hover:scale-105"
+          />
           <div className="leading-tight">
-            <p className="text-sm font-semibold tracking-wide">PTDF</p>
-            <p className="text-xs text-slate-500 -mt-1">NPTR</p>
+            <p className="text-sm font-bold tracking-wide text-slate-900">PTDF</p>
+            <p className="text-xs text-slate-500 -mt-0.5 tracking-wider">NPTR</p>
           </div>
         </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm">
+        <nav className="hidden md:flex items-center gap-8 text-sm">
           {links.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`hover:text-emerald-700 ${
+              className={`relative py-2 font-medium tracking-wide transition-all duration-300 hover:text-emerald-700 hover:scale-105 ${
                 location.pathname === link.path
-                  ? "text-emerald-700 font-medium"
+                  ? "text-emerald-700"
                   : "text-slate-700"
               }`}
             >
               {link.label}
+              {location.pathname === link.path && (
+                <span className="absolute -bottom-[17px] left-0 right-0 h-0.5 bg-emerald-600 rounded-full" />
+              )}
             </Link>
           ))}
         </nav>

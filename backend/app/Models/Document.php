@@ -10,8 +10,13 @@ class Document extends Model
 {
     protected $fillable = [
         'title',
-        'description', 
+        'description',
         'category',
+        'author',
+        'institution',
+        'type',
+        'year',
+        'keywords',
         'file_name',
         'file_path',
         'file_type',
@@ -25,6 +30,7 @@ class Document extends Model
 
     protected $casts = [
         'auto_approved' => 'boolean',
+        'keywords' => 'array',
     ];
 
     public function uploader(): BelongsTo

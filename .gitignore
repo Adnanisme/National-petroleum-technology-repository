@@ -16,6 +16,7 @@ lerna-debug.log*
 # Backend - Laravel/PHP
 /backend/vendor/
 /backend/.env
+/backend/database/*.sqlite
 /backend/storage/*.key
 /backend/storage/logs/
 /backend/storage/app/public/
@@ -35,6 +36,7 @@ lerna-debug.log*
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+.claude/
 .idea
 .DS_Store
 *.suo

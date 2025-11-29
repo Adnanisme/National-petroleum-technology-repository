@@ -7,9 +7,16 @@ export default function Footer() {
     <footer className="border-t bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid md:grid-cols-4 gap-8">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-700" />
-            <p className="font-semibold">NPTR</p>
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.png"
+              alt="PTDF Logo"
+              className="h-14 w-14 object-contain"
+            />
+            <div className="leading-tight">
+              <p className="text-sm font-bold">PTDF</p>
+              <p className="text-xs text-slate-500">NPTR</p>
+            </div>
           </div>
           <p className="text-sm text-slate-600 mt-3 max-w-xs">
             A strategic initiative of PTDF to preserve knowledge, catalyze
@@ -20,23 +27,23 @@ export default function Footer() {
           <p className="font-semibold">Explore</p>
           <ul className="mt-2 space-y-2 text-slate-600">
             <li>
-              <Link to="/repository" className="hover:text-emerald-700">
+              <Link to="/repository" className="hover:text-emerald-700 transition-colors">
                 Repository
               </Link>
             </li>
             <li>
-              <Link to="/innovation" className="hover:text-emerald-700">
+              <Link to="/innovation" className="hover:text-emerald-700 transition-colors">
                 Innovation Hub
               </Link>
             </li>
             <li>
-              <Link to="/databank" className="hover:text-emerald-700">
+              <Link to="/databank" className="hover:text-emerald-700 transition-colors">
                 Data Bank
               </Link>
             </li>
             <li>
-              <Link to="/policy" className="hover:text-emerald-700">
-                Policy & Analytics
+              <Link to="/policy" className="hover:text-emerald-700 transition-colors">
+                Policy
               </Link>
             </li>
           </ul>

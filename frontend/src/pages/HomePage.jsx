@@ -13,11 +13,18 @@ import {
   FileText,
   Users2,
   ShieldCheck,
+  BookOpen,
+  Award,
+  Cpu,
+  Leaf,
+  Settings,
+  Beaker,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '../context/AuthContext';
 import { documents } from '../lib/api';
+import { dummyDocuments, formatFileSize, getCategoryColor } from '../data/dummyDocuments';
 
 const features = [
   {
@@ -74,10 +81,17 @@ export default function HomePage() {
   const fetchFeaturedDocuments = async () => {
     try {
       const response = await documents.getAll();
-      // Get first 3 approved documents for homepage display
-      setFeaturedDocs(response.data.data.slice(0, 3));
+      // If database has documents, use them; otherwise use dummy data
+      if (response.data.data && response.data.data.length > 0) {
+        setFeaturedDocs(response.data.data.slice(0, 3));
+      } else {
+        // Use first 3 dummy documents
+        setFeaturedDocs(dummyDocuments.slice(0, 3));
+      }
     } catch (error) {
       console.error('Error fetching featured documents:', error);
+      // Fallback to dummy data on error
+      setFeaturedDocs(dummyDocuments.slice(0, 3));
     } finally {
       setLoading(false);
     }
@@ -267,22 +281,24 @@ export default function HomePage() {
       {/* Repository Preview */}
       <section id="repo" className="py-12 md:py-20 bg-white border-t">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between mb-8">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold">
-                Explore the Repository
+                Knowledge Repository
               </h2>
               <p className="text-slate-600 mt-1">
-                Discover theses, reports, and patents across Nigeria's oil & gas
-                research landscape.
+                Discover theses, research papers, and technical reports from Nigeria's leading institutions.
               </p>
             </div>
-            <Button 
-              variant="outline" 
-              className="rounded-2xl"
+            <Button
+              variant="outline"
+              className="rounded-2xl border-emerald-600 text-emerald-700 hover:bg-emerald-50"
               asChild
             >
-              <Link to="/repository">View all</Link>
+              <Link to="/repository">
+                <BookOpen className="h-4 w-4 mr-2" />
+                View All
+              </Link>
             </Button>
           </div>
 
@@ -290,74 +306,110 @@ export default function HomePage() {
             {loading ? (
               <div className="grid md:grid-cols-3 gap-6">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <Card key={i} className="rounded-3xl">
-                    <CardHeader>
-                      <div className="animate-pulse">
-                        <div className="h-6 bg-slate-200 rounded w-full mb-2"></div>
-                        <div className="h-4 bg-slate-100 rounded w-1/2"></div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-slate-100 rounded w-full mb-2"></div>
-                        <div className="h-4 bg-slate-100 rounded w-3/4"></div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div key={i} className="rounded-2xl border bg-white p-5 shadow-sm">
+                    <div className="animate-pulse">
+                      <div className="h-6 bg-slate-200 rounded w-full mb-3"></div>
+                      <div className="h-4 bg-slate-100 rounded w-3/4 mb-2"></div>
+                      <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+                    </div>
+                  </div>
                 ))}
-              </div>
-            ) : featuredDocs.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No documents available yet.</p>
               </div>
             ) : (
               <div className="grid md:grid-cols-3 gap-6">
                 {featuredDocs.map((doc) => (
-                  <Card key={doc.id} className="rounded-3xl hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="text-base md:text-lg leading-snug">
-                        {doc.title}
-                      </CardTitle>
-                      <div className="text-sm text-slate-500">
-                        <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs">
-                          {doc.category}
-                        </span>
+                  <motion.div
+                    key={doc.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="group rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 p-5 transition-all hover:shadow-lg cursor-pointer h-[340px] flex flex-col"
+                    onClick={() => navigate('/repository')}
+                  >
+                    {/* Header with Icon and Category */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className={`flex-shrink-0 h-12 w-12 rounded-xl bg-gradient-to-br ${getCategoryColor(doc.category)} p-2 flex items-center justify-center`}>
+                        <FileText className="h-6 w-6 text-white" />
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      {doc.description && (
-                        <p className="text-sm text-slate-600 mb-3 line-clamp-2">
-                          {doc.description.length > 100 ? `${doc.description.substring(0, 100)}...` : doc.description}
-                        </p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-bold text-base text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-2 flex-1">
+                            {doc.title}
+                          </h3>
+                          <span className={`flex-shrink-0 px-2.5 py-1 bg-gradient-to-r ${getCategoryColor(doc.category)} text-white rounded-full text-[10px] font-semibold`}>
+                            {doc.category}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-sm text-slate-600 mb-4 line-clamp-3 flex-shrink-0">
+                      {doc.description}
+                    </p>
+
+                    {/* Metadata Grid */}
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-slate-500 mb-4 flex-shrink-0">
+                      <div className="flex items-center gap-1.5">
+                        <Users2 className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="truncate">{doc.author || doc.uploader?.name}</span>
+                      </div>
+                      {doc.institution && (
+                        <div className="flex items-center gap-1.5">
+                          <Building2 className="h-3.5 w-3.5 flex-shrink-0" />
+                          <span className="truncate">{doc.institution}</span>
+                        </div>
                       )}
-                      <div className="flex items-center justify-between text-xs text-slate-500">
-                        <div>
-                          <div>By: {doc.uploader?.name || 'Unknown'}</div>
-                          <div>Size: {(doc.file_size / 1024 / 1024).toFixed(1)}MB</div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8 rounded-xl"
-                            onClick={() => alert(doc.description || 'No description available')}
-                          >
-                            <FileText className="h-4 w-4 mr-1" /> Abstract
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            className="h-8 rounded-xl"
-                            asChild
-                          >
-                            <Link to={`/repository?document=${doc.id}`}>
-                              <Download className="h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </div>
+                      <div className="flex items-center gap-1.5">
+                        <Award className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="truncate">{doc.type}</span>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex items-center gap-1.5">
+                        <FileText className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span>{doc.year || new Date(doc.created_at).getFullYear()}</span>
+                      </div>
+                    </div>
+
+                    {/* Keywords */}
+                    {doc.keywords && (
+                      <div className="flex flex-wrap gap-1.5 mb-4 flex-shrink-0">
+                        {doc.keywords.slice(0, 3).map((keyword, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-medium"
+                          >
+                            {keyword}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Action Buttons - Push to bottom */}
+                    <div className="flex items-center gap-2 mt-auto">
+                      <Button
+                        size="sm"
+                        className="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 h-9"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/repository`);
+                        }}
+                      >
+                        <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                        View
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 rounded-xl h-9 border-slate-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert(`Download: ${doc.title}`);
+                        }}
+                      >
+                        <Download className="h-3.5 w-3.5 mr-1.5" />
+                        Download
+                      </Button>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             )}
@@ -375,8 +427,8 @@ export default function HomePage() {
                 Prototypes, patents, and commercialization-ready technologies.
               </p>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="rounded-2xl"
               onClick={handleSubmitResearch}
             >
@@ -385,26 +437,140 @@ export default function HomePage() {
           </div>
 
           <div className="mt-6 grid md:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {[
+              {
+                title: "AI-Powered Reservoir Optimization",
+                desc: "Machine learning algorithms achieving 94% accuracy in production forecasting.",
+                trl: "TRL 7",
+                status: "Pilot Testing",
+                gradient: "from-blue-600 to-cyan-500",
+                category: "Digital Technology"
+              },
+              {
+                title: "Biodegradable Drilling Fluids",
+                desc: "Eco-friendly drilling mud reducing environmental impact by 85%.",
+                trl: "TRL 8",
+                status: "Commercial Ready",
+                gradient: "from-green-600 to-emerald-500",
+                category: "Environmental"
+              },
+              {
+                title: "Smart Pipeline Monitoring",
+                desc: "IoT corrosion detection with 95% accuracy preventing failures.",
+                trl: "TRL 9",
+                status: "Deployed",
+                gradient: "from-purple-600 to-violet-500",
+                category: "Infrastructure"
+              },
+              {
+                title: "Modular Offshore Platform",
+                desc: "Compact gas processing reducing costs by 60% for marginal fields.",
+                trl: "TRL 8",
+                status: "Ready",
+                gradient: "from-orange-600 to-amber-500",
+                category: "Engineering"
+              },
+              {
+                title: "CO2 Capture System",
+                desc: "Flare gas conversion with 90% capture efficiency and positive ROI.",
+                trl: "TRL 7",
+                status: "Pilot Phase",
+                gradient: "from-teal-600 to-cyan-500",
+                category: "Environmental"
+              },
+              {
+                title: "Indigenous Downhole Sensors",
+                desc: "Locally made sensors with 99.2% accuracy, reducing imports by 70%.",
+                trl: "TRL 6",
+                status: "Development",
+                gradient: "from-indigo-600 to-blue-500",
+                category: "Research"
+              }
+            ].map((project, i) => (
               <div
                 key={i}
-                className="rounded-3xl overflow-hidden border bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                className="group rounded-3xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
                 onClick={() => navigate('/innovation')}
               >
-                <div className="h-40 bg-gradient-to-br from-emerald-500/70 to-blue-700/70" />
-                <div className="p-4">
-                  <p className="font-medium">
-                    Indigenous Tooling Prototype #{i + 1}
-                  </p>
-                  <p className="text-sm text-slate-600">
-                    Short blurb about the technology, TRL, and desired partners.
-                  </p>
-                  <div className="mt-3 flex gap-2">
-                    <span className="text-[10px] px-2 py-1 rounded-full bg-emerald-100 text-emerald-900">
-                      TRL 6
+                <div className={`relative h-44 bg-gradient-to-br ${project.gradient} overflow-hidden`}>
+                  {/* Animated gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
+
+                  {/* Geometric Pattern Overlays - Much More Visible */}
+                  {project.category === "Digital Technology" && (
+                    <>
+                      <div className="absolute inset-0 opacity-20" style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.3) 20px, rgba(255,255,255,0.3) 22px), repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.3) 20px, rgba(255,255,255,0.3) 22px)'
+                      }} />
+                      <Cpu className="absolute bottom-4 right-4 h-20 w-20 text-white/15 transform rotate-12" />
+                    </>
+                  )}
+
+                  {project.category === "Environmental" && (
+                    <>
+                      <div className="absolute inset-0 opacity-25">
+                        <div className="absolute top-8 left-8 w-16 h-16 rounded-full border-4 border-white/30" />
+                        <div className="absolute top-16 right-12 w-12 h-12 rounded-full border-4 border-white/20" />
+                        <div className="absolute bottom-8 left-1/3 w-20 h-20 rounded-full border-4 border-white/25" />
+                      </div>
+                      <Leaf className="absolute bottom-4 right-4 h-20 w-20 text-white/15 transform -rotate-12" />
+                    </>
+                  )}
+
+                  {project.category === "Infrastructure" && (
+                    <>
+                      <div className="absolute inset-0 opacity-20" style={{
+                        backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 25px, rgba(255,255,255,0.3) 25px, rgba(255,255,255,0.3) 27px)'
+                      }} />
+                      <Building2 className="absolute bottom-4 right-4 h-20 w-20 text-white/15" />
+                    </>
+                  )}
+
+                  {project.category === "Engineering" && (
+                    <>
+                      <div className="absolute inset-0 opacity-20" style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.25) 30px, rgba(255,255,255,0.25) 32px), repeating-linear-gradient(60deg, transparent, transparent 30px, rgba(255,255,255,0.25) 30px, rgba(255,255,255,0.25) 32px), repeating-linear-gradient(-60deg, transparent, transparent 30px, rgba(255,255,255,0.25) 30px, rgba(255,255,255,0.25) 32px)'
+                      }} />
+                      <Settings className="absolute bottom-4 right-4 h-20 w-20 text-white/15 animate-[spin_20s_linear_infinite]" />
+                    </>
+                  )}
+
+                  {project.category === "Research" && (
+                    <>
+                      <div className="absolute inset-0 opacity-25" style={{
+                        backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px)',
+                        backgroundSize: '25px 25px'
+                      }} />
+                      <Beaker className="absolute bottom-4 right-4 h-20 w-20 text-white/15" />
+                    </>
+                  )}
+
+                  {/* Gradient overlay for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent group-hover:from-black/20 transition-all" />
+
+                  {/* Glowing orbs */}
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
+                  <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full blur-xl" />
+
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-slate-900">
+                      {project.category}
                     </span>
-                    <span className="text-[10px] px-2 py-1 rounded-full bg-blue-100 text-blue-900">
-                      Patent‑pending
+                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="font-bold text-base mb-2 text-slate-900 group-hover:text-emerald-700 transition-colors">
+                    {project.title}
+                  </p>
+                  <p className="text-sm text-slate-600 mb-3 line-clamp-2">
+                    {project.desc}
+                  </p>
+                  <div className="flex gap-2">
+                    <span className="text-xs px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
+                      {project.trl}
+                    </span>
+                    <span className="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">
+                      {project.status}
                     </span>
                   </div>
                 </div>
@@ -464,69 +630,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer id="about" className="border-t bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-700" />
-              <p className="font-semibold">NPTR</p>
-            </div>
-            <p className="text-sm text-slate-600 mt-3 max-w-xs">
-              A strategic initiative of PTDF to preserve knowledge, catalyze
-              innovation, and power Nigeria's energy future.
-            </p>
-          </div>
-          <div className="text-sm">
-            <p className="font-semibold">Explore</p>
-            <ul className="mt-2 space-y-2 text-slate-600">
-              <li>
-                <Link to="/repository" className="hover:text-emerald-700">
-                  Repository
-                </Link>
-              </li>
-              <li>
-                <Link to="/innovation" className="hover:text-emerald-700">
-                  Innovation Hub
-                </Link>
-              </li>
-              <li>
-                <Link to="/databank" className="hover:text-emerald-700">
-                  Data Bank
-                </Link>
-              </li>
-              <li>
-                <Link to="/policy" className="hover:text-emerald-700">
-                  Policy & Analytics
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="text-sm">
-            <p className="font-semibold">Resources</p>
-            <ul className="mt-2 space-y-2 text-slate-600">
-              <li>Submission Guidelines</li>
-              <li>API Documentation</li>
-              <li>Data Governance</li>
-              <li>Support</li>
-            </ul>
-          </div>
-          <div className="text-sm">
-            <p className="font-semibold">Contact</p>
-            <ul className="mt-2 space-y-2 text-slate-600">
-              <li>Education & Training Dept., PTDF</li>
-              <li>Abuja, Nigeria</li>
-              <li>contact@nptr.gov.ng</li>
-            </ul>
-            <div className="mt-4">
-              <Button className="rounded-2xl w-full">Partner with NPTR</Button>
-            </div>
-          </div>
-        </div>
-        <div className="border-t text-xs text-slate-500 py-4 text-center">
-          © {new Date().getFullYear()} PTDF • NPTR. All rights reserved.
-        </div>
-      </footer>
     </>
   );
 }
