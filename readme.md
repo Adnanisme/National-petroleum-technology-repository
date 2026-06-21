@@ -1,8 +1,7 @@
 
 # National Petroleum Technology Repository (NPTR)
 
-![NPTR Cover](./images/nptr-cover.png) <!-- Replace with your screenshot: e.g., nptr-cover.png -->
-
+![NPTR Cover](https://github.com/Adnanisme/National-petroleum-technology-repository/blob/main/NPTR-1.webp) 
 ## Overview
 
 The **National Petroleum Technology Repository (NPTR)** is a full-stack platform designed to centralize Nigeria’s petroleum research, training outputs, and innovation assets. It acts as a digital library, a petroleum data bank, and an innovation showcase — enabling researchers, trainees, and industry users to discover, request access to, and share technical documents and datasets in a secure, governed environment.
