@@ -54,13 +54,8 @@ This project showcases building a modern, component-driven frontend with a secur
 
 ## Screenshots
 
-Insert a few screenshots highlighting the library, a dataset request page, and the innovation showcase:
-
-```md
-![Library View](./images/nptr-library-view.png)         <!-- Add: nptr-library-view.png -->
-![Dataset Request](./images/nptr-dataset-request.png)   <!-- Add: nptr-dataset-request.png -->
-![Innovation Showcase](./images/nptr-showcase.png)     <!-- Add: nptr-showcase.png -->
-```
+![](https://raw.githubusercontent.com/Adnanisme/National-petroleum-technology-repository/main/NPTR-2.webp)
+![](https://raw.githubusercontent.com/Adnanisme/National-petroleum-technology-repository/main/NPTR-3.webp)
 
 ---
 
